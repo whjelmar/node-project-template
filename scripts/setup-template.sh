@@ -1,5 +1,34 @@
 #!/bin/bash
 
+# Function to prompt for argument if missing
+prompt_for_argument() {
+  local prompt_text=$1
+  local default_value=$2
+  local result
+
+  read -p "$prompt_text [$default_value]: " result
+  if [ -z "$result" ]; then
+    result=$default_value
+  fi
+  echo $result
+}
+
+# Check for required arguments and prompt if missing
+projectName=${1:-$(prompt_for_argument "Enter the project name" "")}
+shortDescription=${2:-$(prompt_for_argument "Enter the short description" "")}
+longDescription=${3:-$(prompt_for_argument "Enter the long description" "")}
+author=${4:-$(prompt_for_argument "Enter the author" "Walter Hjelmar")}
+authorEmail=${5:-$(prompt_for_argument "Enter the author email" "walter@hjelmar.com")}
+currentDate=${6:-$(date +"%Y-%m-%d")}
+timestamp=${7:-$(date --iso-8601=seconds)}
+currentYear=${8:-$(date +"%Y")}
+
+# Error out if required arguments are still missing
+if [ -z "$projectName" ] || [ -z "$shortDescription" ] || [ -z "$longDescription" ]; then
+  echo "Error: Missing required arguments. Project name, short description, and long description are required." >&2
+  exit 1
+fi
+
 # Function to replace placeholders in a file
 replace_placeholders() {
   local filePath=$1
@@ -27,16 +56,6 @@ replace_placeholders() {
   rm "${filePath}.bak"
 }
 
-# Parameters
-projectName=$1
-shortDescription=$2
-longDescription=$3
-author=${4:-"Walter Hjelmar"}
-authorEmail=${5:-"walter@hjelmar.com"}
-currentDate=${6:-$(date +"%Y-%m-%d")}
-timestamp=${7:-$(date --iso-8601=seconds)}
-currentYear=${8:-$(date +"%Y")}
-
 # Function to walk the file system and replace placeholders
 process_files() {
   local path=$1
@@ -50,19 +69,8 @@ process_files ..
 
 echo "Placeholders replaced successfully."
 
-# Remove setup scripts and POST_CREATE.md
-rm ../POST_CREATE.md
-rm setup-template.sh
-rm setup-template.ps1
-
-# Commit the removal of setup scripts
-git rm ../POST_CREATE.md
-git rm setup-template.sh
-git rm setup-template.ps1
-git commit --message "fix: removing repository cloning scripts"
-
 # Add all changes and commit
 git add --all
-git commit --message "fix: removing boilerplate cruft"
+git commit --message "fix: replace placeholders with actual values"
 
-echo "Cleanup completed successfully."
+echo "Setup completed successfully."

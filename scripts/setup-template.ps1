@@ -9,6 +9,36 @@ param (
     [string]$currentYear = (Get-Date -Format "yyyy")
 )
 
+function PromptForArgument {
+    param (
+        [string]$promptText,
+        [string]$defaultValue
+    )
+
+    $response = Read-Host "$promptText [$defaultValue]"
+    if ([string]::IsNullOrEmpty($response)) {
+        return $defaultValue
+    }
+    return $response
+}
+
+# Prompt for missing arguments
+if (-not $projectName) {
+    $projectName = PromptForArgument "Enter the project name" $null
+}
+if (-not $shortDescription) {
+    $shortDescription = PromptForArgument "Enter the short description" $null
+}
+if (-not $longDescription) {
+    $longDescription = PromptForArgument "Enter the long description" $null
+}
+
+# Error out if required arguments are still missing
+if (-not $projectName -or -not $shortDescription -or -not $longDescription) {
+    Write-Host "Error: Missing required arguments. Project name, short description, and long description are required." -ForegroundColor Red
+    exit 1
+}
+
 # Function to replace placeholders in a file
 function Replace-Placeholders {
     param (
@@ -32,6 +62,11 @@ function Replace-Placeholders {
                             -replace "{{AUTHOR}}", $author `
                             -replace "{{AUTHOR_EMAIL}}", $authorEmail | Set-Content $filePath
 }
+
+# Generate date and timestamp
+$currentDate = (Get-Date -Format "yyyy-MM-dd")
+$timestamp = (Get-Date -Format "o")
+$currentYear = (Get-Date -Format "yyyy")
 
 # Function to walk the file system and replace placeholders
 function Process-Files {
@@ -57,19 +92,8 @@ Process-Files -path ".."
 
 Write-Host "Placeholders replaced successfully."
 
-# Remove setup scripts and POST_CREATE.md
-Remove-Item -Path ../POST_CREATE.md
-Remove-Item -Path setup-template.sh
-Remove-Item -Path setup-template.ps1
-
-# Commit the removal of setup scripts
-git rm ../POST_CREATE.md
-git rm setup-template.sh
-git rm setup-template.ps1
-git commit --message "fix: removing repository cloning scripts"
-
 # Add all changes and commit
 git add --all
-git commit --message "fix: removing boilerplate cruft"
+git commit --message "fix: replace placeholders with actual values"
 
-Write-Host "Cleanup completed successfully."
+Write-Host "Setup completed successfully."
