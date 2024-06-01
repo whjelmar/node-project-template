@@ -108,6 +108,42 @@ Example:
 npx {{PROJECT_NAME}} --force
 ```
 
+## Using the GUI
+
+The application also includes a graphical user interface (GUI) built with Electron and React. The GUI provides equivalent functionality to the CLI, including configuration management, input/output management, logging, and more.
+
+### Configuration Management
+
+The GUI allows you to load and display the current configuration. You can specify a custom configuration file through the GUI.
+
+### Input/Output Management
+
+The GUI provides fields to specify input and output files and allows you to select input and output file types.
+
+### Logging
+
+The GUI displays logs in a dedicated section and allows you to toggle debug and verbose modes.
+
+### Execution Controls
+
+The GUI provides Start/Stop buttons to control the execution of tasks and indicates if dry run mode is enabled.
+
+### Plugin Management
+
+The GUI displays a list of registered plugins and allows you to enable/disable plugins.
+
+### Miscellaneous
+
+The GUI allows you to toggle the banner display and force actions.
+
+### Running the GUI
+
+To start the GUI, run:
+
+```bash
+npm start
+```
+
 ## Configuration File
 
 This project uses cosmiconfig to manage configuration. The configuration system allows for specifying defaults and overriding them with configuration files or environment variables.
