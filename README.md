@@ -68,6 +68,46 @@ npx {{PROJECT_NAME}} --debug
 
 When debug mode is enabled, the application will log detailed debug information, including the running configuration and all registered plugins, to help with troubleshooting and development.
 
+### Enabling Verbose Mode
+
+The CLI supports a verbose mode which provides more detailed output than usual but less than debug-level logging. To enable verbose mode, use the --verbose flag.
+
+Example:
+
+```bash
+npx {{PROJECT_NAME}} --verbose
+```
+
+### Suppressing Output
+
+The CLI supports a quiet mode which suppresses all output except for errors. To enable quiet mode, use the --quiet flag.
+
+Example:
+
+```bash
+npx {{PROJECT_NAME}} --quiet
+```
+
+### Dry Run Mode
+
+The CLI supports a dry run mode which shows what would be done without actually performing any actions. To enable dry run mode, use the --dry-run flag.
+
+Example:
+
+```bash
+npx {{PROJECT_NAME}} --dry-run
+```
+
+### Forcing Actions
+
+The CLI supports a force mode which bypasses confirmation prompts or overwrites files. To enable force mode, use the --force flag.
+
+Example:
+
+```bash
+npx {{PROJECT_NAME}} --force
+```
+
 ## Configuration File
 
 This project uses cosmiconfig to manage configuration. The configuration system allows for specifying defaults and overriding them with configuration files or environment variables.

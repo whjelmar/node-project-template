@@ -15,6 +15,10 @@ program
   .version('0.0.1')
   .description('{{SHORT_DESCRIPTION}}')
   .option('-d, --debug', 'enable debug mode')
+  .option('--verbose', 'enable verbose mode')
+  .option('--quiet', 'suppress all output except errors')
+  .option('--dry-run', 'show what would be done without performing any actions')
+  .option('--force', 'bypass confirmation prompts or overwrite files')
   .option('--no-banner', 'disable the banner')
   .option('-c, --config <path>', 'specify a custom configuration file')
   .option('-i, --input <file>', 'specify the input file')
@@ -28,14 +32,25 @@ const options = program.opts();
 // Load configuration
 const config = loadConfig(options);
 
-// Set logger level based on the debug flag
+// Set logger level based on flags
 if (options.debug) {
   logger.setLevel('debug');
   logger.debug('Debug mode enabled');
   logger.debug('Running configuration:', config);
   logger.debug('Registered plugins:', plugins);
+} else if (options.verbose) {
+  logger.setLevel('verbose');
+  logger.verbose('Verbose mode enabled');
+} else if (options.quiet) {
+  logger.setLevel('error');
 } else {
   logger.setLevel('info');
+}
+
+// Handle dry run
+if (options.dryRun) {
+  logger.info('Dry run mode enabled. No actions will be performed.');
+  // Add any dry-run specific logic here
 }
 
 // Load plugins
@@ -48,9 +63,11 @@ executeHooks('prestart');
 const spinner = ora('Starting the application...').start();
 
 setTimeout(() => {
-  spinner.succeed('Application started successfully!');
+  if (!options.quiet) {
+    spinner.succeed('Application started successfully!');
+  }
 
-  if (options.banner) {
+  if (options.banner && !options.quiet) {
     console.log(figlet.textSync('{{PROJECT_NAME}}'));
   }
 
