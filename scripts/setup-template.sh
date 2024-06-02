@@ -69,6 +69,11 @@ process_files ..
 
 echo "Placeholders replaced successfully."
 
+rm setup-template.*
+cd ..
+rm POST_REPO_CLONING_STEPS.md
+echo "Setup scripts removed successfully."
+
 # Add all changes and commit
 git add --all
 git commit --message "fix: replace placeholders with actual values"
