@@ -96,4 +96,13 @@ Write-Host "Placeholders replaced successfully."
 git add --all
 git commit --message "fix: replace placeholders with actual values"
 
+Remove-Item setup-templates.ps1
+Remove-Item setup-templates.sh
+
+cd ..
+
+Remove-Item POST_REPO_CLONING_STEPS.md
+Write-Host "Removed setup scripts successfully."
+
+
 Write-Host "Setup completed successfully."
